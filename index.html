@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Francese Vivien Alba — Remote Operations & Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14181F;
+    --paper:#F7F5F0;
+    --slate:#57606F;
+    --slate-light:#8B93A1;
+    --amber:#E0973A;
+    --teal:#2E7D6B;
+    --line: rgba(20,24,31,0.12);
+    --line-light: rgba(247,245,240,0.16);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--amber); color:var(--ink);}
+
+  .wrap{max-width:1040px; margin:0 auto; padding:0 32px;}
+
+  /* HERO */
+  .hero{
+    background:var(--ink);
+    color:var(--paper);
+    padding:96px 0 72px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      linear-gradient(var(--line-light) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-light) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity:0.35;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+  }
+  .hero-inner{position:relative; z-index:1;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--amber);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:28px;
+  }
+  .eyebrow::before{content:"●"; font-size:8px;}
+  h1.name{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(40px, 6vw, 68px);
+    line-height:1.02;
+    letter-spacing:-0.01em;
+    max-width:820px;
+  }
+  .role-line{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:400;
+    color:var(--slate-light);
+    font-size:clamp(19px,2.4vw,24px);
+    margin-top:14px;
+  }
+  .hero-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:28px;
+    margin-top:44px;
+    padding-top:28px;
+    border-top:1px solid var(--line-light);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--slate-light);
+  }
+  .hero-meta span{color:var(--paper);}
+
+  /* METRIC STRIP */
+  .metrics{
+    background:var(--teal);
+    color:var(--paper);
+  }
+  .metrics-inner{
+    max-width:1040px; margin:0 auto; padding:0 32px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+  }
+  .metric{
+    padding:30px 24px;
+    border-left:1px solid rgba(247,245,240,0.22);
+  }
+  .metric:first-child{border-left:none;}
+  .metric .num{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:34px;
+    display:block;
+  }
+  .metric .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:rgba(247,245,240,0.78);
+    margin-top:6px;
+    display:block;
+  }
+
+  /* SECTION SCAFFOLD */
+  section{padding:76px 0;}
+  section + section{border-top:1px solid var(--line);}
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:44px;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .sec-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--amber);
+  }
+  h2.sec-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(26px,3.2vw,36px);
+    margin-top:6px;
+  }
+  .sec-sub{
+    font-size:14.5px;
+    color:var(--slate);
+    max-width:340px;
+    line-height:1.5;
+  }
+
+  /* ABOUT */
+  .about-text{
+    font-size:18px;
+    line-height:1.68;
+    max-width:700px;
+    color:#2B313B;
+  }
+  .about-text strong{color:var(--ink);}
+
+  /* EXPERIENCE — ledger style */
+  .ledger{border-top:1px solid var(--line);}
+  .role{
+    display:grid;
+    grid-template-columns:200px 1fr;
+    gap:32px;
+    padding:30px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .role-when{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--slate);
+    padding-top:4px;
+  }
+  .role-when .tag{
+    display:inline-block;
+    margin-top:10px;
+    font-size:10.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--teal);
+    border:1px solid var(--teal);
+    padding:3px 8px;
+    border-radius:2px;
+  }
+  .role-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:21px;
+  }
+  .role-org{color:var(--slate); font-size:14.5px; margin-top:2px; margin-bottom:14px;}
+  .role ul{padding-left:18px; color:#2B313B; font-size:15px; line-height:1.65;}
+  .role li{margin-bottom:6px;}
+  .role li::marker{color:var(--amber);}
+
+  /* SKILLS */
+  .skill-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .skill-card{background:var(--paper); padding:26px 24px;}
+  .skill-card h3{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:14px;
+  }
+  .skill-card ul{list-style:none;}
+  .skill-card li{
+    font-size:14.5px;
+    padding:6px 0;
+    border-top:1px dashed var(--line);
+    color:#2B313B;
+  }
+  .skill-card li:first-child{border-top:none;}
+
+  /* PROJECTS */
+  .proj-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  .proj-card{
+    border:1px solid var(--line);
+    padding:26px 22px;
+    background:#fff;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .proj-card:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(20,24,31,0.08);}
+  .proj-index{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--slate-light);
+    margin-bottom:16px;
+  }
+  .proj-card h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:18.5px;
+    margin-bottom:10px;
+    line-height:1.25;
+  }
+  .proj-card p{font-size:14px; color:var(--slate); line-height:1.55;}
+  .proj-tools{
+    margin-top:16px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .proj-tools span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:var(--teal);
+    border:1px solid var(--teal);
+    padding:2px 7px;
+    border-radius:2px;
+  }
+
+  /* CERTS */
+  .cert-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .cert-pill{
+    border:1px solid var(--ink);
+    padding:12px 18px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .cert-pill::before{content:"✓"; color:var(--teal); font-weight:700;}
+
+  /* CONTACT / FOOTER */
+  footer{
+    background:var(--ink);
+    color:var(--paper);
+    padding:64px 0 40px;
+  }
+  .foot-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:32px;
+  }
+  footer h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(26px,3.4vw,38px);
+    max-width:460px;
+    line-height:1.15;
+  }
+  .foot-contact{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13.5px;
+    line-height:2;
+    color:var(--slate-light);
+  }
+  .foot-contact a{color:var(--paper); text-decoration:none; border-bottom:1px solid var(--amber);}
+  .foot-bottom{
+    margin-top:56px;
+    padding-top:20px;
+    border-top:1px solid var(--line-light);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--slate-light);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  /* NAV */
+  .navbar{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(20,24,31,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line-light);
+  }
+  .nav-inner{
+    max-width:1040px;
+    margin:0 auto;
+    padding:0 32px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:58px;
+  }
+  .nav-mark{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--paper);
+    letter-spacing:0.04em;
+  }
+  .nav-links{
+    display:flex;
+    gap:4px;
+    list-style:none;
+  }
+  .nav-links a{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--slate-light);
+    text-decoration:none;
+    padding:8px 14px;
+    border-radius:2px;
+    transition:color .15s ease, background .15s ease;
+  }
+  .nav-links a:hover{color:var(--paper); background:rgba(247,245,240,0.08);}
+  .nav-links a.cta{
+    color:var(--ink);
+    background:var(--amber);
+    margin-left:6px;
+  }
+  .nav-links a.cta:hover{color:var(--ink); background:#eba854;}
+  .nav-toggle{display:none;}
+
+  @media (max-width:760px){
+    .metrics-inner{grid-template-columns:1fr; }
+    .metric{border-left:none; border-top:1px solid rgba(247,245,240,0.22);}
+    .metric:first-child{border-top:none;}
+    .role{grid-template-columns:1fr; gap:10px;}
+    .skill-grid{grid-template-columns:1fr;}
+    .proj-grid{grid-template-columns:1fr;}
+    .foot-inner{align-items:flex-start;}
+    .nav-links{
+      position:absolute;
+      top:58px;
+      left:0;
+      right:0;
+      background:var(--ink);
+      flex-direction:column;
+      gap:0;
+      padding:8px 16px 16px;
+      border-bottom:1px solid var(--line-light);
+      display:none;
+    }
+    .nav-links.open{display:flex;}
+    .nav-links a{padding:12px 8px; width:100%;}
+    .nav-toggle{
+      display:block;
+      background:none;
+      border:1px solid var(--line-light);
+      color:var(--paper);
+      font-family:'IBM Plex Mono', monospace;
+      font-size:11px;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      padding:8px 12px;
+      border-radius:2px;
+      cursor:pointer;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <span class="nav-mark">F.V. ALBA</span>
+    <button class="nav-toggle" id="navToggle">Menu</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#certs">Certifications</a></li>
+      <li><a href="#contact" class="cta">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-inner">
+    <div class="eyebrow">Available for remote work · Full-time</div>
+    <h1 class="name">Francese Vivien Alba</h1>
+    <p class="role-line">Remote Operations &amp; Administrative Professional</p>
+    <div class="hero-meta">
+      <div>Based in <span>Manila, Philippines</span></div>
+      <div>Flexible <span>time zone coverage</span></div>
+      <div>Setup: <span>MacBook Air M2</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="metrics">
+  <div class="metrics-inner">
+    <div class="metric">
+      <span class="num">30%</span>
+      <span class="label">Labor cost reduced via paperless transition</span>
+    </div>
+    <div class="metric">
+      <span class="num">10%</span>
+      <span class="label">Office overhead cut, SailMark Heavy Equipment</span>
+    </div>
+    <div class="metric">
+      <span class="num">2</span>
+      <span class="label">IBM certifications in AI &amp; agentic systems</span>
+    </div>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-tag">Index / 01</div>
+        <h2 class="sec-title">About</h2>
+      </div>
+      <p class="sec-sub">A quick read on how the work adds up.</p>
+    </div>
+    <p class="about-text">
+      I build order into remote operations, <strong>turning scattered files, inboxes, and client conversations into systems that run on their own.</strong>
+      My background spans client account management, digital record keeping, and social media operations, most recently paired with AI workflow automation
+      that speeds up the repetitive parts of the job. I care about accuracy and follow through as much as I care about the tools, and I'm most useful
+      on teams that need someone to quietly keep things moving.
+    </p>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-tag">Index / 02</div>
+        <h2 class="sec-title">Experience</h2>
+      </div>
+      <p class="sec-sub">Three roles, one thread: operations people can rely on.</p>
+    </div>
+
+    <div class="ledger">
+      <div class="role">
+        <div class="role-when">
+          Oct 2025 – Jun 2026
+          <div class="tag">Current</div>
+        </div>
+        <div>
+          <div class="role-title">AI Operations &amp; Community Operations Specialist</div>
+          <div class="role-org">NoStagnation Academy / Auramax Method — Remote</div>
+          <ul>
+            <li>Managed client accounts in Trainerize, tracking progress and delivering feedback across coaching programs</li>
+            <li>Built scheduling and progress-tracking systems in Notion and Google Sheets</li>
+            <li>Ran social media operations across multiple Instagram accounts, including content scheduling and DM support</li>
+            <li>Designed AI-powered workflows using Claude AI to automate captions, carousel copy, and client summaries</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role">
+        <div class="role-when">Nov 2023 – Aug 2025</div>
+        <div>
+          <div class="role-title">Data &amp; Operations Support</div>
+          <div class="role-org">SailMark Heavy Equipment Sales and Rentals — Manila</div>
+          <ul>
+            <li>Led the transition to a paperless practice, implementing an electronic booking system that cut labor cost by 30% and office overhead by 10%</li>
+            <li>Maintained accurate records across digital databases and spreadsheets</li>
+            <li>Handled professional email correspondence and daily administrative operations</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="role">
+        <div class="role-when">Feb 2021 – Mar 2022</div>
+        <div>
+          <div class="role-title">Administrative &amp; Creative Support Specialist</div>
+          <div class="role-org">Independent Contractor, Upwork — Remote</div>
+          <ul>
+            <li>Managed emails, phone calls, and appointment scheduling for clients</li>
+            <li>Organized digital files, improving document accessibility and workflow efficiency</li>
+            <li>Designed presentations and edited photo/video content for marketing use</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-tag">Index / 03</div>
+        <h2 class="sec-title">Skills &amp; Tools</h2>
+      </div>
+      <p class="sec-sub">Grouped by what they're actually used for.</p>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card">
+        <h3>Operations &amp; Admin</h3>
+        <ul>
+          <li>Digital record keeping</li>
+          <li>Data entry &amp; database maintenance</li>
+          <li>Email &amp; calendar management</li>
+          <li>Client account management</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h3>Content &amp; Social</h3>
+        <ul>
+          <li>Instagram content &amp; reels</li>
+          <li>Captions &amp; carousel copy</li>
+          <li>Canva design</li>
+          <li>Community &amp; DM management</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <h3>Platforms &amp; AI</h3>
+        <ul>
+          <li>GoHighLevel &amp; HubSpot CRM</li>
+          <li>Notion, Google Sheets, Slack</li>
+          <li>Claude AI workflow automation</li>
+          <li>Trainerize</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-tag">Index / 04</div>
+        <h2 class="sec-title">Project Highlights</h2>
+      </div>
+      <p class="sec-sub">Selected work drawn from client and coaching operations.</p>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="proj-index">01</div>
+        <h3>Client Onboarding Automation</h3>
+        <p>Streamlined new client intake for coaching programs, reducing manual setup steps and getting members active faster.</p>
+        <div class="proj-tools"><span>Notion</span><span>Trainerize</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-index">02</div>
+        <h3>Instagram Content System</h3>
+        <p>Built a repeatable content pipeline for captions, carousels, and stories, keeping posting consistent across accounts.</p>
+        <div class="proj-tools"><span>Canva</span><span>Claude AI</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-index">03</div>
+        <h3>Client Progress Tracker</h3>
+        <p>Designed a Google Sheets and Notion tracker for coaching clients, giving coaches a clear view of adherence and results.</p>
+        <div class="proj-tools"><span>Google Sheets</span><span>Notion</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-index">04</div>
+        <h3>Paperless Ops Overhaul</h3>
+        <p>Moved SailMark's booking and records process fully digital, cutting labor cost by 30% and office overhead by 10%.</p>
+        <div class="proj-tools"><span>Digital Records</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-index">05</div>
+        <h3>Email Workflow Automation</h3>
+        <p>Set up templated, AI-assisted email responses for recurring client questions, cutting response time without losing a personal tone.</p>
+        <div class="proj-tools"><span>Claude AI</span></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-index">06</div>
+        <h3>Marketing Visuals</h3>
+        <p>Produced photo and video assets for social promotions, from editing through final export for campaign use.</p>
+        <div class="proj-tools"><span>Canva</span><span>Adobe</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="certs">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-tag">Index / 05</div>
+        <h2 class="sec-title">Certifications</h2>
+      </div>
+      <p class="sec-sub">Formal training behind the AI-adjacent work.</p>
+    </div>
+    <div class="cert-row">
+      <div class="cert-pill">IBM AI Developer Professional</div>
+      <div class="cert-pill">IBM RAG &amp; Agentic AI Professional</div>
+      <div class="cert-pill">Social Media Marketing Certification</div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-inner">
+      <h2>Looking for someone reliable to run the details? Let's talk.</h2>
+      <div class="foot-contact">
+        vivienalba1016@gmail.com<br>
+        Manila, Philippines — Remote / Any time zone
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>Francese Vivien Alba — Portfolio</span>
+      <span>Updated 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+</script>
+</body>
+</html>
